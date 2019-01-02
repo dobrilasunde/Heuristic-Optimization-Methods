@@ -32,6 +32,10 @@ void Optimizer::add_goal_value(float value) {
 	this->_goal_values.push_back(value);
 }
 
+void Optimizer::set_worst_value(float worst) {
+	this->_worst_value = worst;
+}
+
 std::vector<float>& Optimizer::get_weight_factors() {
 	return this->_weight_factors;
 }
@@ -48,13 +52,6 @@ float Optimizer::get_goal_value_by_index(int index) {
 	return this->_goal_values[index];
 }
 
-float Optimizer::calculate_global_goal() {
-	
-	float res = 0.0f;
-
-	for (int i = 0; i < this->_goal_values.size(); i++) {
-		res += this->_goal_values[i] * (1.0f / this->_weight_factors[i]);
-	}
-
-	return res;
+float Optimizer::get_worst_value() {
+	return this->_worst_value;
 }

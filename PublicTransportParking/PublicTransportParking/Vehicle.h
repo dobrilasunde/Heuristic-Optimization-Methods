@@ -37,7 +37,7 @@ private:
 	std::vector<int> mCanPark;
 };
 
-bool operator==(const Vehicle& lhs, const Vehicle& rhs)
+inline bool operator==(const Vehicle& lhs, const Vehicle& rhs)
 {
 	return lhs.GetLength() == rhs.GetLength() && lhs.GetDepartureTime() == rhs.GetDepartureTime() && lhs.GetCategory() == rhs.GetCategory() && lhs.GetSchedule() == rhs.GetSchedule();
 }

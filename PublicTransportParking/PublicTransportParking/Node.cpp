@@ -1,8 +1,8 @@
 #include "Node.h"
 #include "Track.h"
 #include "Vehicle.h"
-#include<iostream>
-#include<algorithm>
+#include <iostream>
+#include <algorithm>
 
 Node::Node(): mTrack(nullptr)
 {
@@ -314,6 +314,10 @@ bool Node::SwitchVehicleInTrack(Vehicle* oldVehicle, Vehicle* newVehicle)
 {
 	if (CanSwitchVehicleInTrack(oldVehicle, newVehicle))
 	{
-		GetTrack()->SwitchVehicles(oldVehicle, newVehicle);
+		if (GetTrack()->SwitchVehicles(oldVehicle, newVehicle)) {
+			return true;
+		}
+		return false;
 	}
+	return false;
 }

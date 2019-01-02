@@ -9,4 +9,6 @@ public:
 	void calculate_number_of_used_tracks();
 	void calculate_unused_space();
 	void calculate_weight_factor_3();
+	float calculate_global_goal();
+	bool is_better(float current_best);
 };

@@ -2,11 +2,13 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include <ctime>
 #include "Vehicle.h"
 #include <iterator>
 #include "Track.h"
 #include <algorithm>
 #include "Node.h"
+#include "Optimizer.h"
 
 Data::Data()
 {
@@ -207,10 +209,15 @@ void Data::ArrangeVehiclesToTracks()
 		{
 			std::cout << "Vehicle " << i << ": " << mVehicles[i]->GetDepartureTime() << " parked" << std::endl;
 		}
+		else
+		{
+			mUnsortedVehicles.push_back(mVehicles[i]);
+			std::cout << "Vehicle " << i << ": " << mVehicles[i]->GetDepartureTime() << " unsorted" << std::endl;
+		}
 	}
 }
 
-void Data::print_data() {
+void Data::print_data(bool print_unsorted) {
 	for (int i = 0; i < this->mTracks.size(); i++) {
 		std::cout << this->mTracks[i]->GetID() << "(" << this->mTracks[i]->GetCategory() << "):";
 		for (int j = 0; j < this->mTracks[i]->GetParkedVehicles().size(); j++) {
@@ -219,8 +226,27 @@ void Data::print_data() {
 		}
 		std::cout << std::endl;
 	}
+
+	if (print_unsorted) {
+		std::cout << "Unsorted:";
+		for (int i = 0; i < this->mUnsortedVehicles.size(); i++) {
+			std::cout << " " << this->mUnsortedVehicles[i]->GetDepartureTime()
+				<< "(" << this->mUnsortedVehicles[i]->GetCategory() << ")";
+		}
+		std::cout << std::endl;
+	}
 }
 
-void Data::start_optimizing() {
+void Data::start_optimizing(Optimizer *optimizer) {
 
+	float best_value = optimizer->get_worst_value();
+
+	time_t start_time = time(NULL);
+
+	while (true) {
+		if (this->mUnsortedVehicles.size() > 0) {
+
+		}
+		return;
+	}
 }
