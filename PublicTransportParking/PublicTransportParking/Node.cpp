@@ -1,5 +1,6 @@
 #include "Node.h"
 #include "Track.h"
+#include "Vehicle.h"
 #include<iostream>
 #include<algorithm>
 
@@ -186,6 +187,21 @@ bool Node::AddVehicleToTrack(Vehicle* vehicle)
 {
 	if (mTrack != nullptr)
 	{
+		if (GetParent()->GetTrack() != nullptr)
+		{
+			std::vector<Vehicle*> parkedVehicles = GetParent()->GetTrack()->GetParkedVehicles();
+			if (!parkedVehicles.empty())
+			{
+				for (Vehicle* v : parkedVehicles)
+				{
+					if (vehicle->GetDepartureTime() < v->GetDepartureTime())
+					{
+						return false;
+					}
+				}
+			}
+		}
+
 		if (GetTrack()->ParkVehicle(vehicle))
 		{
 			return true;
@@ -202,5 +218,6 @@ bool Node::AddVehicleToTrack(Vehicle* vehicle)
 			}
 		}
 	}
+
 	return false;
 }
