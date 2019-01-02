@@ -4,11 +4,15 @@
 
 class Track
 {
+
 public:
 	Track(int length, int mID);
 	~Track();
 
 	bool ParkVehicle(class Vehicle* vehicle);
+	bool CanPark(class Vehicle* vehicle);
+	bool CanSwitchVehicles(class Vehicle* oldVehicle, class Vehicle* newVehicle);
+	bool SwitchVehicles(class Vehicle* oldVehicle, class Vehicle* newVehicle);
 
 	void SetLength(int length) { mLength = length; }
 	void SetBlockedTracks(class Track* blockedTrack) { mBlockedTracks.push_back(blockedTrack); }
@@ -18,6 +22,7 @@ public:
 	int GetID() const { return mID; }
 	std::vector<class Vehicle*> GetParkedVehicles() { return mParkedVehicles; }
 	std::vector<class Track*> GetBlockedTracks() { return mBlockedTracks; }
+
 private:
 	int mLength;
 	int mCategory;

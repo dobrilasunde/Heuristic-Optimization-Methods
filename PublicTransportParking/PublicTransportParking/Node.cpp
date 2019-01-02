@@ -252,3 +252,68 @@ bool Node::AddVehicleToTrack(Vehicle* vehicle)
 
 	return false;
 }
+
+bool Node::CanSwitchVehicleInTrack(Vehicle* oldVehicle, Vehicle* newVehicle)
+{
+	if (mTrack != nullptr)
+	{
+		// Checking if parents are blocking the child.
+		std::vector<Node*> parents = GetParents();
+		if (!parents.empty())
+		{
+			for (Node* parent : parents)
+			{
+				if (parent->GetTrack() != nullptr)
+				{
+					std::vector<Vehicle*> parkedVehicles = parent->GetTrack()->GetParkedVehicles();
+					if (!parkedVehicles.empty())
+					{
+						for (Vehicle* v : parkedVehicles)
+						{
+							if (newVehicle->GetDepartureTime() < v->GetDepartureTime())
+							{
+								return false;
+							}
+						}
+					}
+				}
+			}
+		}
+
+		// Checking if the child is blocking its children.
+		std::vector<Node*> children = GetChildren();
+		if (!children.empty())
+		{
+			for (Node* child : children)
+			{
+				if (child->GetTrack() != nullptr)
+				{
+					std::vector<Vehicle*> parkedVehicles = child->GetTrack()->GetParkedVehicles();
+					if (!parkedVehicles.empty())
+					{
+						for (Vehicle* v : parkedVehicles)
+						{
+							if (newVehicle->GetDepartureTime() > v->GetDepartureTime())
+							{
+								return false;
+							}
+						}
+					}
+				}
+			}
+		}
+
+		if (GetTrack()->CanSwitchVehicles(oldVehicle, newVehicle))
+		{
+			return true;
+		}
+	}
+}
+
+bool Node::SwitchVehicleInTrack(Vehicle* oldVehicle, Vehicle* newVehicle)
+{
+	if (CanSwitchVehicleInTrack(oldVehicle, newVehicle))
+	{
+		GetTrack()->SwitchVehicles(oldVehicle, newVehicle);
+	}
+}
