@@ -153,7 +153,15 @@ bool Data::LoadData(const std::string& fileName)
 
 		for (int i = 1; i < results.size(); ++i)
 		{
-			newChild->AppendChild(new Node(mTracks.at(std::stoi(results[i]))));
+			Node* foundChild = mRoot->FindChild(std::stoi(results[i]));
+			if (foundChild != nullptr)
+			{
+				newChild->AppendChild(foundChild);
+			}
+			else
+			{
+				newChild->AppendChild(new Node(mTracks.at(std::stoi(results[i]))));
+			}
 			mTracks.at(std::stoi(results[0]))->SetBlockedTracks(mTracks.at(std::stoi(results[i])));
 		}
 	}

@@ -4,12 +4,12 @@
 #include<iostream>
 #include<algorithm>
 
-Node::Node(): mTrack(nullptr), mParent(nullptr)
+Node::Node(): mTrack(nullptr)
 {
 
 }
 
-Node::Node(Track* track) : mTrack(track), mParent(nullptr)
+Node::Node(Track* track) : mTrack(track)
 {
 
 }
@@ -41,7 +41,7 @@ Node* Node::AppendChild(Node* child)
 
 void Node::SetParent(Node* parent)
 {
-	mParent = parent;
+	mParent.push_back(parent);
 }
 
 void Node::PopBackChild()
@@ -75,7 +75,7 @@ bool Node::HasChildren() const
 
 bool Node::HasParent() const
 {
-	if (mParent != nullptr)
+	if (!mParent.empty())
 	{
 		return true;
 	}
@@ -187,16 +187,47 @@ bool Node::AddVehicleToTrack(Vehicle* vehicle)
 {
 	if (mTrack != nullptr)
 	{
-		if (GetParent()->GetTrack() != nullptr)
+		// Checking if parents are blocking the child.
+		std::vector<Node*> parents = GetParents();
+		if (!parents.empty())
 		{
-			std::vector<Vehicle*> parkedVehicles = GetParent()->GetTrack()->GetParkedVehicles();
-			if (!parkedVehicles.empty())
+			for (Node* parent : parents)
 			{
-				for (Vehicle* v : parkedVehicles)
+				if (parent->GetTrack() != nullptr)
 				{
-					if (vehicle->GetDepartureTime() < v->GetDepartureTime())
+					std::vector<Vehicle*> parkedVehicles = parent->GetTrack()->GetParkedVehicles();
+					if (!parkedVehicles.empty())
 					{
-						return false;
+						for (Vehicle* v : parkedVehicles)
+						{
+							if (vehicle->GetDepartureTime() < v->GetDepartureTime())
+							{
+								return false;
+							}
+						}
+					}
+				}
+			}
+		}
+
+		// Checking if the child is blocking its children.
+		std::vector<Node*> children = GetChildren();
+		if (!children.empty())
+		{
+			for (Node* child : children)
+			{
+				if (child->GetTrack() != nullptr)
+				{
+					std::vector<Vehicle*> parkedVehicles = child->GetTrack()->GetParkedVehicles();
+					if (!parkedVehicles.empty())
+					{
+						for (Vehicle* v : parkedVehicles)
+						{
+							if (vehicle->GetDepartureTime() > v->GetDepartureTime())
+							{
+								return false;
+							}
+						}
 					}
 				}
 			}

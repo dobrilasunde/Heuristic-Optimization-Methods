@@ -19,7 +19,8 @@ public:
 	bool HasChildren() const;
 	bool HasParent() const;
 
-	Node* GetParent() const { return mParent; }
+	std::vector<Node*> GetParents() const { return mParent; }
+	std::vector<Node*> GetChildren() const { return mChildren; }
 	Node* GetChild(int position) const;
 	int GetChildrenNumber() const { return mChildren.size(); }
 	int GetGrandChildrenNumber();
@@ -39,7 +40,7 @@ public:
 
 private:
 	class Track* mTrack;
-	Node* mParent;
+	std::vector<Node*> mParent;
 	std::vector<Node*> mChildren;
 	int CountNodesRecursively(Node *root, int& count);
 };
