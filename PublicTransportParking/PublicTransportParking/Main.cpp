@@ -1,5 +1,5 @@
 #include "Data.h"
-#include<iostream>
+#include <iostream>
 #include "Vehicle.h"
 int main()
 {
@@ -7,6 +7,7 @@ int main()
 	data->LoadData("instanca1.txt");
 
 	data->ArrangeVehiclesToTracks();
-	
+	data->print_data();
 
+	data->start_optimizing();
 }

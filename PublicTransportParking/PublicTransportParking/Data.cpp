@@ -201,3 +201,18 @@ void Data::ArrangeVehiclesToTracks()
 		}
 	}
 }
+
+void Data::print_data() {
+	for (int i = 0; i < this->mTracks.size(); i++) {
+		std::cout << this->mTracks[i]->GetID() << "(" << this->mTracks[i]->GetCategory() << "):";
+		for (int j = 0; j < this->mTracks[i]->GetParkedVehicles().size(); j++) {
+			std::cout << " " << this->mTracks[i]->GetParkedVehicles()[j]->GetDepartureTime() 
+				<< "(" << this->mTracks[i]->GetParkedVehicles()[j]->GetCategory() << ")";
+		}
+		std::cout << std::endl;
+	}
+}
+
+void Data::start_optimizing() {
+
+}

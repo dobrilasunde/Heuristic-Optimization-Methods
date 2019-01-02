@@ -14,6 +14,8 @@ public:
 	std::vector<class Track*> GetTracks() const { return mTracks; }
 	class Node* GetRoot() const { return mRoot; }
 	void ArrangeVehiclesToTracks();
+	void print_data();
+	void start_optimizing();
 
 private:
 	std::vector<class Vehicle*> mVehicles;
