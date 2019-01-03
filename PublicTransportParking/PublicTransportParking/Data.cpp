@@ -273,7 +273,7 @@ void Data::start_optimizing(Optimizer *optimizer) {
 
 		int swaps = 0;
 		bool cond = false;
-		/*if (this->mUnsortedVehicles.size() > 0) {
+		if (this->mUnsortedVehicles.size() > 0) {
 			for (int i = 0; i < mSortedVehicles.size(); i++) {
 				for (int j = 0; j < mUnsortedVehicles.size(); j++) {
 					if (this->SwapUnsortedVehicle(mUnsortedVehicles[j], mSortedVehicles[i])) {
@@ -286,14 +286,14 @@ void Data::start_optimizing(Optimizer *optimizer) {
 					break;
 				}
 			}
-		}*/
-
+		}
+		/*
 		if (this->mUnsortedVehicles.size() > 0) {
 			if (this->InsertFirstUnsorted()) {
 				std::cout << "Managed to insert an unsorted vehicle!" << std::endl;
 			}
 		}
-		
+		*/
 		if (current_taboo_time >= taboo_time && !taboo_list.empty()) {
 			taboo_list.erase(taboo_list.begin());
 			current_taboo_time--;
@@ -352,11 +352,11 @@ void Data::start_optimizing(Optimizer *optimizer) {
 				this->print_to_file("res-5m-i1.txt");
 			}
 		}
-		/*if (this->mUnsortedVehicles.size() > 0) {
+		if (this->mUnsortedVehicles.size() > 0) {
 			if (this->InsertFirstUnsorted()) {
 				std::cout << "Managed to insert an unsorted vehicle!" << std::endl;
 			}
-		}*/
+		}
 		current_taboo_time++;
 		//std::cout << "BEST VALUE: " << temp_best_value << ", swaps: " << swaps << std::endl;
 		//std::cout << "ITERATION " << iter << " DONE!" << std::endl;
