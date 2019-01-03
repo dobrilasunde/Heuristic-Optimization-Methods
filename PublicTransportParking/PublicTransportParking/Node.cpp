@@ -209,7 +209,6 @@ bool Node::AddVehicleToTrack(Vehicle* vehicle)
 				}
 			}
 		}
-
 		// Checking if the child is blocking its children.
 		std::vector<Node*> children = GetChildren();
 		if (!children.empty())
@@ -232,7 +231,6 @@ bool Node::AddVehicleToTrack(Vehicle* vehicle)
 				}
 			}
 		}
-
 		if (GetTrack()->ParkVehicle(vehicle))
 		{
 			return true;

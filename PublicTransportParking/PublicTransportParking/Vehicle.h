@@ -5,7 +5,7 @@
 class Vehicle
 {
 public:
-	Vehicle();
+	Vehicle(int ID);
 	~Vehicle();
 
 	void SetLength(int length) { mLength = length; }
@@ -14,6 +14,7 @@ public:
 	void SetDepartureTime(int departureTime) { mDepartureTime = departureTime; }
 	void SetSchedule(int schedule) { mSchedule = schedule; }
 	void SetTrackID(int trackID) { mTrackID = trackID; }
+	void SetVehicleID(int vehicleID) { mVehicleID = vehicleID; }
 
 	int GetLength() const { return mLength; }
 	int GetCategory() const { return mCategory; }
@@ -22,6 +23,7 @@ public:
 	int GetDepartureTime() const { return mDepartureTime; }
 	int GetSchedule() const { return mSchedule; }
 	int GetTrackID() const { return mTrackID; }
+	int GetVehicleID() const { return mVehicleID; }
 
 	struct CompareByDepartureTime
 	{
@@ -37,6 +39,7 @@ private:
 	int mDepartureTime;
 	int mSchedule;
 	int mTrackID;
+	int mVehicleID;
 	std::vector<int> mCanPark;
 };
 

@@ -39,7 +39,7 @@ bool Data::LoadData(const std::string& fileName)
 
 	for (int i = 0; i < mNumberOfVehicles; ++i)
 	{
-		mVehicles.push_back(new Vehicle());
+		mVehicles.push_back(new Vehicle(i+1));
 	}
 
 	int numberOfTracks;
@@ -101,7 +101,7 @@ bool Data::LoadData(const std::string& fileName)
 
 		for (int i = 0; i < numberOfTracks; ++i)
 		{
-			mTracks.push_back(new Track(std::stoi(results[i]), i));
+			mTracks.push_back(new Track(std::stoi(results[i]), i+1));
 		}
 	}
 
@@ -145,11 +145,11 @@ bool Data::LoadData(const std::string& fileName)
 		Node* newChild;
 		if (found != nullptr)
 		{
-			newChild = found->AppendChild(new Node(mTracks.at(std::stoi(results[0]))));
+			newChild = found->AppendChild(new Node(mTracks.at(std::stoi(results[0]) - 1)));
 		}
 		else
 		{
-			newChild = mRoot->AppendChild(new Node(mTracks.at(std::stoi(results[0]))));
+			newChild = mRoot->AppendChild(new Node(mTracks.at(std::stoi(results[0]) - 1)));
 		}
 
 		for (int i = 1; i < results.size(); ++i)
@@ -161,9 +161,9 @@ bool Data::LoadData(const std::string& fileName)
 			}
 			else
 			{
-				newChild->AppendChild(new Node(mTracks.at(std::stoi(results[i]))));
+				newChild->AppendChild(new Node(mTracks.at(std::stoi(results[i]) - 1)));
 			}
-			mTracks.at(std::stoi(results[0]))->SetBlockedTracks(mTracks.at(std::stoi(results[i])));
+			mTracks.at(std::stoi(results[0]) - 1)->SetBlockedTracks(mTracks.at(std::stoi(results[i]) - 1));
 		}
 	}
 
@@ -206,13 +206,13 @@ void Data::ArrangeVehiclesToTracks()
 	{
 		if (mRoot->AddVehicleToTrack(mVehicles[i]))
 		{
-			std::cout << "Vehicle " << i << ": " << mVehicles[i]->GetDepartureTime() << " parked" << std::endl;
+			std::cout << "Vehicle " << mVehicles[i]->GetVehicleID() << ": " << mVehicles[i]->GetDepartureTime() << " parked" << std::endl;
 			mSortedVehicles.push_back(mVehicles[i]);
 		}
 		else
 		{
+			std::cout << "Vehicle " << mVehicles[i]->GetVehicleID() << ": " << mVehicles[i]->GetDepartureTime() << " unsorted" << std::endl;
 			mUnsortedVehicles.push_back(mVehicles[i]);
-			std::cout << "Vehicle " << i << ": " << mVehicles[i]->GetDepartureTime() << " unsorted" << std::endl;
 		}
 	}
 }

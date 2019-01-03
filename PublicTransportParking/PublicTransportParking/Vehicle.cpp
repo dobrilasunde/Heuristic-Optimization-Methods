@@ -1,8 +1,9 @@
 #include "Vehicle.h"
 #include <string>
 #include <iostream>
-Vehicle::Vehicle()
+Vehicle::Vehicle(int ID)
 {
+	mVehicleID = ID;
 	mTrackID = -1;
 }
 
