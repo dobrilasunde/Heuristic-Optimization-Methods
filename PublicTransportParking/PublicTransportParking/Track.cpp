@@ -71,16 +71,23 @@ bool Track::CanSwitchVehicles(Vehicle* oldVehicle, Vehicle* newVehicle)
 
 bool Track::SwitchVehicles(Vehicle* oldVehicle, Vehicle* newVehicle)
 {
-	auto iter = std::find(mParkedVehicles.begin(), mParkedVehicles.end(), oldVehicle);
-	if (iter != mParkedVehicles.end())
+	if (CanSwitchVehicles(oldVehicle, newVehicle))
 	{
-		mLengthOfParkedVehicles -= oldVehicle->GetLength();
-		mParkedVehicles.erase(iter);
-		mParkedVehicles.push_back(newVehicle);
-		newVehicle->SetTrackID(mID);
-		mCategory = newVehicle->GetCategory();
-		mLengthOfParkedVehicles += newVehicle->GetLength();
-		return true;
+		auto iter = std::find(mParkedVehicles.begin(), mParkedVehicles.end(), oldVehicle);
+		if (iter != mParkedVehicles.end())
+		{
+			mLengthOfParkedVehicles -= oldVehicle->GetLength();
+			mParkedVehicles.erase(iter);
+			mParkedVehicles.push_back(newVehicle);
+			newVehicle->SetTrackID(mID);
+			mCategory = newVehicle->GetCategory();
+			mLengthOfParkedVehicles += newVehicle->GetLength();
+			return true;
+		}
+		else
+		{
+			return false;
+		}
 	}
 
 	return false;

@@ -23,7 +23,7 @@
     <ProjectGuid>{13F5C128-DD2D-4719-9EC9-029FB85189F1}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>PublicTransportParking</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.15063.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
