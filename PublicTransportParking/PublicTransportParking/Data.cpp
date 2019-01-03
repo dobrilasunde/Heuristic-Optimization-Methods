@@ -266,7 +266,7 @@ void Data::start_optimizing(Optimizer *optimizer) {
 	time_t start_time = time(NULL);
 	bool measure_time = true, print_60 = true;
 	std::vector<int> taboo_list;
-	int taboo_time = 5, current_taboo_time = 0;
+	int taboo_time = 15, current_taboo_time = 0;
 
 	while (nothing_happened < 2*this->mNumberOfVehicles) {
 		iter++;
