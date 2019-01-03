@@ -317,7 +317,6 @@ bool Node::SwitchVehicleInTrack(Vehicle* oldVehicle, Vehicle* newVehicle)
 		if (GetTrack()->SwitchVehicles(oldVehicle, newVehicle)) {
 			return true;
 		}
-		return false;
 	}
 	return false;
 }

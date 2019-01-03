@@ -14,5 +14,5 @@ public:
 	void calculate_number_of_used_tracks_minus_1();
 	void calculate_sum_of_rewards();
 	float calculate_global_goal() override;
-	bool is_better(float current_best);
+	bool is_better(float *current_best) override;
 };

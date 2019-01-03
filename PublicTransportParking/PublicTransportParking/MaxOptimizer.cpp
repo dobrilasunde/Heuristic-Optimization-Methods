@@ -1,3 +1,4 @@
+#include <iostream>
 #include "Data.h"
 #include "Track.h"
 #include "Vehicle.h"
@@ -7,21 +8,31 @@
 MaxOptimizer::MaxOptimizer(Data *data) : Optimizer(data) {
 	this->_weight_factors.push_back(0.0f);
 	this->_weight_factors.push_back(0.0f);
-	this->_worst_value = -20000000;
+	this->_goal_values.push_back(0.0f);
+	this->_goal_values.push_back(0.0f);
+	this->_goal_values.push_back(0.0f);
+	this->_worst_value = -200000000;
 }
 
 MaxOptimizer::MaxOptimizer(Data *data, std::vector<float>& weight_factors) : Optimizer(data, weight_factors) {
+	this->_goal_values.push_back(0.0f);
+	this->_goal_values.push_back(0.0f);
+	this->_goal_values.push_back(0.0f);
+	this->_worst_value = -200000000;
 }
 
 void MaxOptimizer::calculate_vehicle_pairs() {
 	std::vector<Track*> tracks = this->_data->GetTracks();
-	std::vector<Vehicle*> vehicles = this->_data->GetVehicles();
 
 	int number_of_pairs = 0;
 
 	for (int i = 0; i < tracks.size(); i++) {
+		std::vector<Vehicle*> vehicles = tracks[i]->GetParkedVehicles();
+		if (vehicles.empty()) {
+			continue;
+		}
 		for (int j = 0; j < vehicles.size() - 1; j++) {
-			if (vehicles[i]->GetSchedule() == vehicles[i + 1]->GetSchedule()) {
+			if (vehicles[j]->GetSchedule() == vehicles[j + 1]->GetSchedule()) {
 				number_of_pairs++;
 			}
 		}
@@ -81,6 +92,9 @@ void MaxOptimizer::calculate_sum_of_rewards() {
 
 	for (int i = 0; i < tracks.size(); i++) {
 		std::vector<Vehicle*> vehicles = tracks[i]->GetParkedVehicles();
+		if (vehicles.empty()) {
+			continue;
+		}
 		for (int j = 0; j < vehicles.size() - 1; j++) {
 			int vr = vehicles[j + 1]->GetDepartureTime() - vehicles[j]->GetDepartureTime();
 			if (vr > 20) {
@@ -100,7 +114,7 @@ void MaxOptimizer::calculate_sum_of_rewards() {
 }
 
 float MaxOptimizer::calculate_global_goal() {
-	
+
 	this->calculate_vehicle_pairs();
 	this->calculate_weight_factor_1();
 	this->calculate_goal_2();
@@ -114,11 +128,14 @@ float MaxOptimizer::calculate_global_goal() {
 	return res;
 }
 
-bool MaxOptimizer::is_better(float current_best) {
+bool MaxOptimizer::is_better(float *current_best) {
 	
-	if (calculate_global_goal() < current_best) {
+	float x = calculate_global_goal();
+
+	if (x < *current_best) {
 		return false;
 	}
 
+	*current_best = x;
 	return true;
 }

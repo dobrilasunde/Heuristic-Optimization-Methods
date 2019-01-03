@@ -1,4 +1,5 @@
 #include "Data.h"
+#include <ctime>
 #include <iostream>
 #include "Vehicle.h"
 #include "Optimizer.h"
@@ -7,6 +8,8 @@
 
 int main()
 {
+	srand(time(NULL));
+
 	Data* data = new Data();
 	data->LoadData("instanca1.txt");
 

@@ -3,7 +3,7 @@
 #include <iostream>
 Vehicle::Vehicle()
 {
-
+	mTrackID = -1;
 }
 
 Vehicle::~Vehicle()

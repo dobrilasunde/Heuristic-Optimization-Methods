@@ -10,9 +10,12 @@ public:
 	~Track();
 
 	bool ParkVehicle(class Vehicle* vehicle);
+	bool UnparkVehicle(class Vehicle* vehicle);
 	bool CanPark(class Vehicle* vehicle);
 	bool CanSwitchVehicles(class Vehicle* oldVehicle, class Vehicle* newVehicle);
 	bool SwitchVehicles(class Vehicle* oldVehicle, class Vehicle* newVehicle);
+	void SortVehiclesInTrack();
+	bool contains(class Vehicle *vehicle);
 
 	void SetLength(int length) { mLength = length; }
 	void SetBlockedTracks(class Track* blockedTrack) { mBlockedTracks.push_back(blockedTrack); }

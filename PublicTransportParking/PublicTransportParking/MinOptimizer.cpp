@@ -7,33 +7,42 @@
 #include "MinOptimizer.h"
 
 MinOptimizer::MinOptimizer(Data *data) : Optimizer(data) {
-	this->_weight_factors.push_back(0.0);
-	this->_weight_factors.push_back(this->_data->GetTracks().size());
-	this->_weight_factors.push_back(0.0);
-	this->_worst_value = 20000000;
+	this->_weight_factors.push_back(0.0f);
+	this->_weight_factors.push_back((float)this->_data->GetTracks().size());
+	this->_weight_factors.push_back(0.0f);
+	this->_goal_values.push_back(0.0f);
+	this->_goal_values.push_back(0.0f);
+	this->_goal_values.push_back(0.0f);
+	this->_worst_value = 200000000;
 }
 
 MinOptimizer::MinOptimizer(Data *data, std::vector<float> &weight_factors) : Optimizer(data, weight_factors) {
+	this->_goal_values.push_back(0.0f);
+	this->_goal_values.push_back(0.0f);
+	this->_goal_values.push_back(0.0f);
+	this->_worst_value = 200000000;
 }
 
 void MinOptimizer::calculate_number_of_track_pairs() {
 	std::vector<Track*> tracks_temp = this->_data->GetTracks(), tracks;
-
+	
 	for (int i = 0; i < tracks_temp.size(); i++) {
 		if (!tracks_temp[i]->GetParkedVehicles().empty()) {
 			tracks.push_back(tracks_temp[i]);
 		}
 	}
-
+	
 	int number_of_pairs = 0;
 
-	for (int i = 0; i < tracks.size() - 1; i++) {	
-		if (tracks[i]->GetCategory() != tracks[i + 1]->GetCategory()) {
-			number_of_pairs++;
+	if (!tracks.empty()) {
+		for (int i = 0; i < tracks.size() - 1; i++) {
+			if (tracks[i]->GetCategory() != tracks[i + 1]->GetCategory()) {
+				number_of_pairs++;
+			}
 		}
 	}
-
-	this->_goal_values[0] = number_of_pairs;
+	
+	this->_goal_values[0] = (float)number_of_pairs;
 }
 
 void MinOptimizer::calculate_number_of_used_tracks() {
@@ -47,8 +56,8 @@ void MinOptimizer::calculate_number_of_used_tracks() {
 		}
 	}
 
-	this->_goal_values[1] = used_tracks;
-	this->_weight_factors[0] = used_tracks;
+	this->_goal_values[1] = (float)used_tracks;
+	this->_weight_factors[0] = (float)used_tracks;
 }
 
 void MinOptimizer::calculate_unused_space() {
@@ -66,7 +75,7 @@ void MinOptimizer::calculate_unused_space() {
 			total_track_length += tracks[i]->GetLength();
 		}
 	}
-	this->_goal_values[2] = total_track_length - used_space;
+	this->_goal_values[2] = (float)(total_track_length - used_space);
 }
 
 void MinOptimizer::calculate_weight_factor_3() {
@@ -85,7 +94,7 @@ void MinOptimizer::calculate_weight_factor_3() {
 		total_vehicle_length += vehicles[i]->GetLength();
 	}
 
-	this->_weight_factors[2] = total_track_capacity - total_vehicle_length;
+	this->_weight_factors[2] = (float)(total_track_capacity - total_vehicle_length);
 }
 
 float MinOptimizer::calculate_global_goal() {
@@ -104,11 +113,15 @@ float MinOptimizer::calculate_global_goal() {
 	return res;
 }
 
-bool MinOptimizer::is_better(float current_best) {
+bool MinOptimizer::is_better(float *current_best) {
 	
-	if (calculate_global_goal() > current_best) {
+	float x = calculate_global_goal();
+
+	if (x > *current_best) {
 		return false;
 	}
+
+	*current_best = x;
 
 	return true;
 }

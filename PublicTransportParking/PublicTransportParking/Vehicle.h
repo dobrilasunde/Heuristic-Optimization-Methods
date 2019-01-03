@@ -13,13 +13,15 @@ public:
 	void SetCanPark(std::vector <std::string> canPark);
 	void SetDepartureTime(int departureTime) { mDepartureTime = departureTime; }
 	void SetSchedule(int schedule) { mSchedule = schedule; }
-	
+	void SetTrackID(int trackID) { mTrackID = trackID; }
+
 	int GetLength() const { return mLength; }
 	int GetCategory() const { return mCategory; }
 	std::vector<int> GetCanPark() const { return mCanPark; }
 	bool GetCanParkOnTrack(int trackNumber) const { return mCanPark.at(trackNumber); }
 	int GetDepartureTime() const { return mDepartureTime; }
 	int GetSchedule() const { return mSchedule; }
+	int GetTrackID() const { return mTrackID; }
 
 	struct CompareByDepartureTime
 	{
@@ -34,6 +36,7 @@ private:
 	int mCategory;
 	int mDepartureTime;
 	int mSchedule;
+	int mTrackID;
 	std::vector<int> mCanPark;
 };
 
