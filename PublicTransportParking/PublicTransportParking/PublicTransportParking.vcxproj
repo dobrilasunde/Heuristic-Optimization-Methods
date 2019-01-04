@@ -23,7 +23,7 @@
     <ProjectGuid>{13F5C128-DD2D-4719-9EC9-029FB85189F1}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>PublicTransportParking</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.15063.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -145,6 +145,7 @@
     <ClCompile Include="MinOptimizer.cpp" />
     <ClCompile Include="Node.cpp" />
     <ClCompile Include="Optimizer.cpp" />
+    <ClCompile Include="OptimizerRunner.cpp" />
     <ClCompile Include="Track.cpp" />
     <ClCompile Include="Vehicle.cpp" />
   </ItemGroup>
@@ -154,6 +155,7 @@
     <ClInclude Include="MinOptimizer.h" />
     <ClInclude Include="Node.h" />
     <ClInclude Include="Optimizer.h" />
+    <ClInclude Include="OptimizerRunner.h" />
     <ClInclude Include="Track.h" />
     <ClInclude Include="Vehicle.h" />
   </ItemGroup>

@@ -16,7 +16,12 @@ Track::~Track()
 
 bool Track::CanPark(Vehicle* vehicle)
 {
-	if ((vehicle->GetLength() + mLengthOfParkedVehicles + 0.5 > mLength) || (vehicle->GetCanParkOnTrack(mID-1) != true) || (mCategory != 0 && !mParkedVehicles.empty() && mCategory != vehicle->GetCategory()))
+	float bonus = 0.0f;
+	if (!this->mParkedVehicles.empty()) {
+		bonus = 0.5f;
+	}
+
+	if ((vehicle->GetLength() + mLengthOfParkedVehicles + bonus > mLength) || (vehicle->GetCanParkOnTrack(mID-1) != true) || (mCategory != 0 && !mParkedVehicles.empty() && mCategory != vehicle->GetCategory()))
 	{
 		return false;
 	}
@@ -32,7 +37,10 @@ bool Track::ParkVehicle(Vehicle* vehicle)
 	else
 	{
 		mCategory = vehicle->GetCategory();
-		mLengthOfParkedVehicles += vehicle->GetLength() + 0.5;
+		mLengthOfParkedVehicles += vehicle->GetLength();
+		if (!mParkedVehicles.empty()) {
+			mLengthOfParkedVehicles += 0.5f;
+		}
 		mParkedVehicles.push_back(vehicle);
 		vehicle->SetTrackID(mID);
 	}
@@ -46,7 +54,10 @@ bool Track::UnparkVehicle(Vehicle *vehicle) {
 	}
 	for (int i = 0; i < mParkedVehicles.size(); i++) {
 		if (vehicle == mParkedVehicles[i]) {
-			mLengthOfParkedVehicles -= 0.5 + vehicle->GetLength();
+			mLengthOfParkedVehicles -= vehicle->GetLength();
+			if (!mParkedVehicles.empty()) {
+				mLengthOfParkedVehicles -= 0.5f;
+			}
 			mParkedVehicles.erase(mParkedVehicles.begin() + i);
 			if (mParkedVehicles.empty()) {
 				mCategory = 0;
@@ -55,6 +66,7 @@ bool Track::UnparkVehicle(Vehicle *vehicle) {
 			break;
 		}
 	}
+	return true;
 }
 
 bool Track::CanSwitchVehicles(Vehicle* oldVehicle, Vehicle* newVehicle)
@@ -79,7 +91,6 @@ bool Track::SwitchVehicles(Vehicle* oldVehicle, Vehicle* newVehicle)
 			mLengthOfParkedVehicles -= oldVehicle->GetLength();
 			mParkedVehicles.erase(iter);
 			mParkedVehicles.push_back(newVehicle);
-			newVehicle->SetTrackID(mID);
 			mCategory = newVehicle->GetCategory();
 			mLengthOfParkedVehicles += newVehicle->GetLength();
 			return true;

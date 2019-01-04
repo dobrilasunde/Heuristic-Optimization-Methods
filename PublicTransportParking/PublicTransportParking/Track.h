@@ -19,10 +19,12 @@ public:
 
 	void SetLength(int length) { mLength = length; }
 	void SetBlockedTracks(class Track* blockedTrack) { mBlockedTracks.push_back(blockedTrack); }
+	void SetNode(class Node *node) { mNode = node; }
 
 	int GetLength() const { return mLength; }
 	int GetCategory() const { return mCategory; }
 	int GetID() const { return mID; }
+	class Node* GetNode() { return mNode; }
 	std::vector<class Vehicle*> GetParkedVehicles() { return mParkedVehicles; }
 	std::vector<class Track*> GetBlockedTracks() { return mBlockedTracks; }
 
@@ -31,6 +33,7 @@ private:
 	int mCategory;
 	int mID;
 	float mLengthOfParkedVehicles;
+	class Node *mNode;
 	std::vector<class Vehicle*> mParkedVehicles;
 	std::vector<class Track*> mBlockedTracks;
 };

@@ -9,6 +9,7 @@
     <ClCompile Include="MinOptimizer.cpp" />
     <ClCompile Include="Optimizer.cpp" />
     <ClCompile Include="MaxOptimizer.cpp" />
+    <ClCompile Include="OptimizerRunner.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Data.h" />
@@ -18,5 +19,6 @@
     <ClInclude Include="MinOptimizer.h" />
     <ClInclude Include="Optimizer.h" />
     <ClInclude Include="MaxOptimizer.h" />
+    <ClInclude Include="OptimizerRunner.h" />
   </ItemGroup>
 </Project>

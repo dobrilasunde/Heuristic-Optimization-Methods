@@ -28,7 +28,7 @@ public:
 
 	void Print() const;
 	bool SortByNumberOfChildren();
-	bool AddVehicleToTrack(class Vehicle* vehicle);
+	bool AddVehicleToTrack(class Vehicle* vehicle, bool continue_down = true);
 	bool CanSwitchVehicleInTrack(class Vehicle* oldVehicle, class Vehicle* newVehicle);
 	bool SwitchVehicleInTrack(class Vehicle* oldVehicle, class Vehicle* newVehicle);
 

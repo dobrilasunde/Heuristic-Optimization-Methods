@@ -5,6 +5,7 @@
 #include "Optimizer.h"
 #include "MaxOptimizer.h"
 #include "MinOptimizer.h"
+#include "OptimizerRunner.h"
 
 int main()
 {
@@ -16,5 +17,7 @@ int main()
 	data->ArrangeVehiclesToTracks();
 	data->print_data(true);
 
-	data->start_optimizing(new MinOptimizer(data));
+	//data->start_optimizing(new MinOptimizer(data));
+	OptimizerRunner *runner = new OptimizerRunner(new MinOptimizer(data), new MaxOptimizer(data), data);
+	runner->start_optimizing();
 }

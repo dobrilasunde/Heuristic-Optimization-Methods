@@ -11,7 +11,6 @@ Node::Node(): mTrack(nullptr)
 
 Node::Node(Track* track) : mTrack(track)
 {
-
 }
 
 Node::~Node()
@@ -183,7 +182,7 @@ bool Node::SortByNumberOfChildren()
 	return true;
 }
 
-bool Node::AddVehicleToTrack(Vehicle* vehicle)
+bool Node::AddVehicleToTrack(Vehicle* vehicle, bool continue_down)
 {
 	if (mTrack != nullptr)
 	{
@@ -235,6 +234,10 @@ bool Node::AddVehicleToTrack(Vehicle* vehicle)
 		{
 			return true;
 		}
+	}
+
+	if (!continue_down) {
+		return false;
 	}
 
 	if (!mChildren.empty())
