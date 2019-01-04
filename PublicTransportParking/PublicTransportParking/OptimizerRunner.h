@@ -21,6 +21,6 @@ public:
 	float get_best_value_min();
 	float get_best_value_max();
 	void set_best_result();
-	void start_optimizing();
+	void start_optimizing(const std::string& file_to_load);
 	void print_to_file(const std::string &filename);
 };

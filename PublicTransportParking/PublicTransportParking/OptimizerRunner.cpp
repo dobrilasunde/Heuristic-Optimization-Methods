@@ -55,7 +55,7 @@ void OptimizerRunner::set_best_result() {
 	}
 }
 
-void OptimizerRunner::start_optimizing() {
+void OptimizerRunner::start_optimizing(const std::string& file_to_load) {
 	this->_iter = 0;
 	this->_best_value_max = _max_opt->get_worst_value();
 	this->_best_value_min = _min_opt->get_worst_value();
@@ -215,21 +215,30 @@ void OptimizerRunner::start_optimizing() {
 			if (checkpoint >= 60 && print_60) {
 				std::cout << std::endl;
 				this->_data->print_data(true);
-				this->print_to_file("res-1m-i1.txt");
+				std::string tmp = "res-1m-i";
+				tmp += file_to_load[8];
+				tmp += ".txt";
+				this->print_to_file(tmp);
 				print_60 = false;
 			}
 			else if (checkpoint >= 300) {
 				std::cout << std::endl;
 				this->_data->print_data(true);
 				measure_time = false;
-				this->print_to_file("res-5m-i1.txt");
+				std::string tmp = "res-5m-i";
+				tmp += file_to_load[8];
+				tmp += ".txt";
+				this->print_to_file(tmp);
 			}
 		}
 		current_taboo_time++;
 	}
 	std::cout << "All done! Time: " << (time(NULL) - start_time)/60.0f << " minutes."<< std::endl;
 	this->_data->print_data(true);
-	this->print_to_file("res-n-i1.txt");
+	std::string tmp = "res-n-i";
+	tmp += file_to_load[8];
+	tmp += ".txt";
+	this->print_to_file(tmp);
 }
 
 void OptimizerRunner::print_to_file(const std::string &filename) {
