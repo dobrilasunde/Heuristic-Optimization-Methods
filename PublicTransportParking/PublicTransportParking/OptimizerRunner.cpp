@@ -55,6 +55,40 @@ void OptimizerRunner::set_best_result() {
 	}
 }
 
+int OptimizerRunner::find_best_index(int index, float temp_best_value_min, float temp_best_value_max,
+	int &best_index_min, int &best_index_max) {
+	float min_v = this->_min_opt->calculate_global_goal();
+	float max_v = this->_max_opt->calculate_global_goal();
+
+	bool compare_min = false, compare_max = false;
+	if (min_v < temp_best_value_min) {
+		compare_min = true;
+	}
+	if (max_v > temp_best_value_max) {
+		compare_max = true;
+	}
+
+	if (compare_max && compare_min) {
+		if (fabs(max_v + this->_best_value_max) > fabs(min_v + this->_best_value_min)) {
+			best_index_max = index;
+			return 1;
+		}
+		else {
+			best_index_min = index;
+			return -1;
+		}
+	}
+	else if (compare_max) {
+		best_index_max = index;
+		return 1;
+	}
+	else if (compare_min) {
+		best_index_min = index;
+		return -1;
+	}
+	return 0;
+}
+
 void OptimizerRunner::start_optimizing(const std::string& file_to_load) {
 	this->_iter = 0;
 	this->_best_value_max = _max_opt->get_worst_value();
@@ -71,6 +105,8 @@ void OptimizerRunner::start_optimizing(const std::string& file_to_load) {
 
 		int swaps = 0;
 		bool cond = false;
+
+		/* Try to swap an unsorted vehicle with a sorted one. */
 		if (this->_data->GetUnsortedVehicles().size() > 0) {
 			for (int i = 0; i < this->_data->GetSortedVehicles().size(); i++) {
 				for (int j = 0; j < this->_data->GetUnsortedVehicles().size(); j++) {
@@ -85,6 +121,9 @@ void OptimizerRunner::start_optimizing(const std::string& file_to_load) {
 				}
 			}
 		}
+
+		/* ########### */
+
 		if (current_taboo_time >= taboo_time && !taboo_list.empty()) {
 			taboo_list.erase(taboo_list.begin());
 			current_taboo_time--;
@@ -105,32 +144,66 @@ void OptimizerRunner::start_optimizing(const std::string& file_to_load) {
 		}
 
 		Vehicle *v = this->_data->GetSortedVehicles()[random_index];
-		int best_index_min = -1, best_index_max = -1;
-		int min_or_max = 0;
 
-		/* ############ */
+		/* Try to insert a sorted vehicle in a different track */
+
 		Track *original_track = this->_data->GetRoot()->FindChild(v->GetTrackID())->GetTrack();
 		original_track->UnparkVehicle(v);
-		bool inserted = false;
+		int best_track_index_min = -1, best_track_index_max = -1;
+		int min_or_max = 0;
+
 		for (int i = 0; i < this->_data->GetTracks().size(); i++) {
 			if (v->GetTrackID() == this->_data->GetTracks()[i]->GetID()) {
 				continue;
 			}
 			Node *temp_node = this->_data->GetTracks()[i]->GetNode();
 			if (temp_node->AddVehicleToTrack(v, false)) {
-				inserted = true;
+	
 				temp_node->GetTrack()->SortVehiclesInTrack();
-				break;
+				
+				int x = this->find_best_index(i, temp_best_value_min, temp_best_value_max, best_track_index_min, best_track_index_max);
+
+				if (x > 0) {
+					min_or_max++;
+				}
+				else if (x < 0) {
+					min_or_max--;
+				}
+
+				this->_data->GetTracks()[i]->UnparkVehicle(v);
 			}
 
 		}
 
-		if (!inserted) {
-			original_track->ParkVehicle(v);
-			original_track->SortVehiclesInTrack();
+		if (min_or_max > 0 && best_track_index_max != -1) {
+			original_track->UnparkVehicle(v);
+			this->_data->GetTracks()[best_track_index_max]->GetNode()->AddVehicleToTrack(v);
+			this->_data->GetTracks()[best_track_index_max]->SortVehiclesInTrack();
+			temp_best_value_max = this->_max_opt->calculate_global_goal();
+			if (temp_best_value_max > this->_best_value_max) {
+				this->_best_value_max = temp_best_value_max;
+				this->set_best_result();
+				nothing_happened = 0;
+			}
+		}
+		else if (min_or_max <= 0 && best_track_index_min != -1) {
+			original_track->UnparkVehicle(v);
+			this->_data->GetTracks()[best_track_index_min]->GetNode()->AddVehicleToTrack(v);
+			this->_data->GetTracks()[best_track_index_min]->SortVehiclesInTrack();
+			temp_best_value_min = this->_min_opt->calculate_global_goal();
+			if (temp_best_value_min < this->_best_value_min) {
+				this->_best_value_min = temp_best_value_min;
+				this->set_best_result();
+				nothing_happened = 0;
+			}
 		}
 
 		/* ############ */
+
+		int best_index_min = -1, best_index_max = -1;
+		min_or_max = 0;
+
+		/* Try to swap two sorted vehicles. */
 
 		for (int i = 0; i < this->_data->GetSortedVehicles().size(); i++) {
 			if (v->GetTrackID() == this->_data->GetSortedVehicles()[i]->GetTrackID()) {
@@ -142,33 +215,12 @@ void OptimizerRunner::start_optimizing(const std::string& file_to_load) {
 			if (this->_data->SwapVehicles(v, this->_data->GetSortedVehicles()[i])) {
 				swaps++;
 				
-				float min_v = this->_min_opt->calculate_global_goal();
-				float max_v = this->_max_opt->calculate_global_goal();
+				int x = this->find_best_index(i, temp_best_value_min, temp_best_value_max, best_index_min, best_index_max);
 
-				bool compare_min = false, compare_max = false;
-				if (min_v < temp_best_value_min) {
-					compare_min = true;
-				}
-				if (max_v > temp_best_value_max) {
-					compare_max = true;
-				}
-
-				if (compare_max && compare_min) {
-					if (fabs(max_v + this->_best_value_max) > fabs(min_v + this->_best_value_min)) {
-						best_index_max = i;
-						min_or_max++;
-					}
-					else {
-						best_index_min = i;
-						min_or_max--;
-					}
-				}
-				else if (compare_max) {
-					best_index_max = i;
+				if (x > 0) {
 					min_or_max++;
 				}
-				else if (compare_min) {
-					best_index_min = i;
+				else if (x < 0) {
 					min_or_max--;
 				}
 
@@ -203,7 +255,11 @@ void OptimizerRunner::start_optimizing(const std::string& file_to_load) {
 		else {
 			nothing_happened++;
 		}
+
+		/* ########## */
 		
+		/* Try to insert an unsorted vehicle */
+
 		if (this->_data->GetUnsortedVehicles().size() > 0) {
 			if (this->_data->InsertFirstUnsorted()) {
 				std::cout << "Managed to insert an unsorted vehicle!" << std::endl;

@@ -12,6 +12,8 @@ private:
 	float _best_value_min;
 	float _best_value_max;
 	int _iter;
+	int find_best_index(int index, float temp_best_value_min, float temp_best_value_max, 
+		int &best_index_min, int &best_index_max);
 public:
 	OptimizerRunner(class MinOptimizer *min_opt, class MaxOptimizer *max_opt, class Data *data);
 	class MinOptimizer* get_min_optimizer();
