@@ -98,7 +98,7 @@ void OptimizerRunner::start_optimizing(const std::string& file_to_load) {
 	time_t start_time = time(NULL);
 	bool measure_time = true, print_60 = true;
 	std::vector<int> taboo_list;
-	int taboo_time = 15, current_taboo_time = 0;
+	int taboo_time = this->_data->GetVehicles().size() / 3, current_taboo_time = 0;
 
 	while (nothing_happened < 2 * this->_data->GetTracks().size() * this->_data->GetVehicles().size()) {
 		this->_iter++;
@@ -145,7 +145,7 @@ void OptimizerRunner::start_optimizing(const std::string& file_to_load) {
 
 		Vehicle *v = this->_data->GetSortedVehicles()[random_index];
 
-		/* Try to insert a sorted vehicle in a different track */
+		/* Try to insert a sorted vehicle into a different track. */
 
 		Track *original_track = this->_data->GetRoot()->FindChild(v->GetTrackID())->GetTrack();
 		original_track->UnparkVehicle(v);
