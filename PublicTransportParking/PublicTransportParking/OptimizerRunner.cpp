@@ -100,7 +100,7 @@ void OptimizerRunner::start_optimizing(const std::string& file_to_load) {
 	std::vector<int> taboo_list;
 	int taboo_time = 15, current_taboo_time = 0;
 
-	while (nothing_happened < 4 * this->_data->GetVehicles().size()) {
+	while (nothing_happened < 2 * this->_data->GetTracks().size() * this->_data->GetVehicles().size()) {
 		this->_iter++;
 
 		int swaps = 0;
