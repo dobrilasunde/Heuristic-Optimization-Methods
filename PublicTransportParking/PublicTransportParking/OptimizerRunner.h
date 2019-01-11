@@ -16,6 +16,7 @@ private:
 		int &best_index_min, int &best_index_max);
 public:
 	OptimizerRunner(class MinOptimizer *min_opt, class MaxOptimizer *max_opt, class Data *data);
+	~OptimizerRunner();
 	class MinOptimizer* get_min_optimizer();
 	class MaxOptimizer* get_max_optimizer();
 	class Data* get_data();

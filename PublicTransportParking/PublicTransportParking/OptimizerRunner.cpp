@@ -19,6 +19,11 @@ OptimizerRunner::OptimizerRunner(MinOptimizer * min_opt, MaxOptimizer * max_opt,
 	this->_best_value_max = this->_max_opt->get_worst_value();
 }
 
+OptimizerRunner::~OptimizerRunner() {
+	delete _min_opt;
+	delete _max_opt;
+}
+
 MinOptimizer* OptimizerRunner::get_min_optimizer() {
 	return this->_min_opt;
 }
@@ -111,7 +116,7 @@ void OptimizerRunner::start_optimizing(const std::string& file_to_load) {
 			for (int i = 0; i < this->_data->GetSortedVehicles().size(); i++) {
 				for (int j = 0; j < this->_data->GetUnsortedVehicles().size(); j++) {
 					if (this->_data->SwapUnsortedVehicle(this->_data->GetUnsortedVehicles()[j], this->_data->GetSortedVehicles()[i])) {
-						std::cout << "Managed to swap an unsorted vehicle!" << std::endl;
+						//std::cout << "Managed to swap an unsorted vehicle!" << std::endl;
 						cond = true;
 						break;
 					}
@@ -262,7 +267,7 @@ void OptimizerRunner::start_optimizing(const std::string& file_to_load) {
 
 		if (this->_data->GetUnsortedVehicles().size() > 0) {
 			if (this->_data->InsertFirstUnsorted()) {
-				std::cout << "Managed to insert an unsorted vehicle!" << std::endl;
+				std::cout << "Managed to insert an unsorted vehicle! " << this->_data->GetUnsortedVehicles().size() << " unsorted vehicles left!" << std::endl;
 			}
 		}
 
@@ -295,16 +300,27 @@ void OptimizerRunner::start_optimizing(const std::string& file_to_load) {
 	tmp += file_to_load[8];
 	tmp += ".txt";
 	this->print_to_file(tmp);
+	std::cout << this->_min_opt->get_goal_value_by_index(0)/this->_min_opt->get_weight_factor_by_index(0) << 
+		" " << this->_min_opt->get_goal_value_by_index(1) / this->_min_opt->get_weight_factor_by_index(1) <<
+		" " << this->_min_opt->get_goal_value_by_index(2) / this->_min_opt->get_weight_factor_by_index(2) << std::endl;
+	std::cout << this->_max_opt->get_goal_value_by_index(0) / this->_max_opt->get_weight_factor_by_index(0) <<
+		" " << this->_max_opt->get_goal_value_by_index(1) / this->_max_opt->get_weight_factor_by_index(1) <<
+		" " << this->_max_opt->get_goal_value_by_index(2) << std::endl;
 }
 
 void OptimizerRunner::print_to_file(const std::string &filename) {
 	std::ofstream f;
 	f.open(filename);
 	for (int i = 0; i < this->_best_result.size(); i++) {
-		f << this->_best_result[i] << std::endl;
+		if (i != 0) {
+			f << std::endl;
+		}
+		f << this->_best_result[i];
 	}
 
-	f << "\n";
+	f.close();
+	std::size_t pos = filename.find(".txt");
+	f.open(filename.substr(0, pos) + "_extra.txt");
 	f << "Max function: " << this->_best_value_max << "\n";
 	f << "Min function: " << this->_best_value_min << "\n";
 	f << "Iterations: " << this->_iter << "\n";

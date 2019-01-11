@@ -57,7 +57,7 @@ void MinOptimizer::calculate_number_of_used_tracks() {
 	}
 
 	this->_goal_values[1] = (float)used_tracks;
-	this->_weight_factors[0] = (float)used_tracks;
+	this->_weight_factors[0] = (float)used_tracks - 1;
 }
 
 void MinOptimizer::calculate_unused_space() {

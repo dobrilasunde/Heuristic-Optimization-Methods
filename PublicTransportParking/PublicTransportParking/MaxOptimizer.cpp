@@ -51,19 +51,23 @@ void MaxOptimizer::calculate_weight_factor_1() {
 		}
 	}
 
-	this->_weight_factors[0] = this->_data->GetVehicles().size() - used_tracks;
+	this->_weight_factors[0] = this->_data->GetSortedVehicles().size() - used_tracks;
 }
 
 void MaxOptimizer::calculate_goal_2() {
-	std::vector<Track*> tracks = this->_data->GetTracks();
+	std::vector<Track*> temp_tracks = this->_data->GetTracks(), tracks;
 	
+	for (int i = 0; i < temp_tracks.size(); i++) {
+		if (!temp_tracks[i]->GetParkedVehicles().empty()) {
+			tracks.push_back(temp_tracks[i]);
+		}
+	}
+
 	int t = 0;
 	
 	for (int i = 0; i < tracks.size() - 1; i++) {
-		if (!tracks[i]->GetParkedVehicles().empty() && !tracks[i + 1]->GetParkedVehicles().empty()) {
-			if (tracks[i]->GetParkedVehicles().back() == tracks[i + 1]->GetParkedVehicles()[0]) {
-				t++;
-			}
+		if (tracks[i]->GetParkedVehicles().back() == tracks[i + 1]->GetParkedVehicles()[0]) {
+			t++;
 		}
 	}
 
@@ -110,7 +114,7 @@ void MaxOptimizer::calculate_sum_of_rewards() {
 		}
 	}
 
-	this->_goal_values[2] = (1.0f / evaluated_pairs) * sum_of_rewards;
+	this->_goal_values[2] = (1.0f / 15 * evaluated_pairs) * sum_of_rewards;
 }
 
 float MaxOptimizer::calculate_global_goal() {

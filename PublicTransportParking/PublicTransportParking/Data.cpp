@@ -17,7 +17,15 @@ Data::Data()
 
 Data::~Data()
 {
-
+	delete mRoot;
+	for (int i = 0; i < mTracks.size(); i++) {
+		delete mTracks[i];
+	}
+	mSortedVehicles.clear();
+	mUnsortedVehicles.clear();
+	for (int i = 0; i < mVehicles.size(); i++) {
+		delete mVehicles[i];
+	}
 }
 
 bool Data::LoadData(const std::string& fileName)
