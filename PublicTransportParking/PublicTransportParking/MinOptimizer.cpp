@@ -24,7 +24,8 @@ MinOptimizer::MinOptimizer(Data *data, std::vector<float> &weight_factors) : Opt
 }
 
 void MinOptimizer::calculate_number_of_track_pairs() {
-	std::vector<Track*> tracks_temp = this->_data->GetTracks(), tracks;
+	std::vector<Track*> tracks_temp = this->_data->GetTracks();
+	std::vector<Track*> tracks;
 	
 	for (int i = 0; i < tracks_temp.size(); i++) {
 		if (!tracks_temp[i]->GetParkedVehicles().empty()) {

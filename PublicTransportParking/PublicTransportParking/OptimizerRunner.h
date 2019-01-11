@@ -11,6 +11,10 @@ private:
 	std::vector<std::string> _best_result;
 	float _best_value_min;
 	float _best_value_max;
+	std::vector<float> _best_goals_min;
+	std::vector<float> _best_goals_max;
+	std::vector<float> _best_weight_factors_min;
+	std::vector<float> _best_weight_factors_max;
 	int _iter;
 	int find_best_index(int index, float temp_best_value_min, float temp_best_value_max, 
 		int &best_index_min, int &best_index_max);

@@ -17,6 +17,18 @@ OptimizerRunner::OptimizerRunner(MinOptimizer * min_opt, MaxOptimizer * max_opt,
 	this->_data = data;
 	this->_best_value_min = this->_min_opt->get_worst_value();
 	this->_best_value_max = this->_max_opt->get_worst_value();
+	this->_best_goals_min.push_back(0);
+	this->_best_goals_min.push_back(0);
+	this->_best_goals_min.push_back(0);
+	this->_best_weight_factors_min.push_back(0);
+	this->_best_weight_factors_min.push_back(0);
+	this->_best_weight_factors_min.push_back(0);
+	this->_best_goals_max.push_back(0);
+	this->_best_goals_max.push_back(0);
+	this->_best_goals_max.push_back(0);
+	this->_best_weight_factors_max.push_back(0);
+	this->_best_weight_factors_max.push_back(0);
+	this->_best_weight_factors_max.push_back(0);
 }
 
 OptimizerRunner::~OptimizerRunner() {
@@ -58,6 +70,17 @@ void OptimizerRunner::set_best_result() {
 		temp_str = temp_str.substr(0, temp_str.size() - 1);
 		this->_best_result.push_back(temp_str);
 	}
+	this->_best_goals_max[0] = this->_max_opt->get_goal_value_by_index(0);
+	this->_best_goals_max[1] = this->_max_opt->get_goal_value_by_index(1);
+	this->_best_goals_max[2] = this->_max_opt->get_goal_value_by_index(2);
+	this->_best_goals_min[0] = this->_min_opt->get_goal_value_by_index(0);
+	this->_best_goals_min[1] = this->_min_opt->get_goal_value_by_index(1);
+	this->_best_goals_min[2] = this->_min_opt->get_goal_value_by_index(2);
+	this->_best_weight_factors_max[0] = this->_max_opt->get_weight_factor_by_index(0);
+	this->_best_weight_factors_max[1] = this->_max_opt->get_weight_factor_by_index(1);
+	this->_best_weight_factors_min[0] = this->_min_opt->get_weight_factor_by_index(0);
+	this->_best_weight_factors_min[1] = this->_min_opt->get_weight_factor_by_index(1);
+	this->_best_weight_factors_min[2] = this->_min_opt->get_weight_factor_by_index(2);
 }
 
 int OptimizerRunner::find_best_index(int index, float temp_best_value_min, float temp_best_value_max,
@@ -300,12 +323,22 @@ void OptimizerRunner::start_optimizing(const std::string& file_to_load) {
 	tmp += file_to_load[8];
 	tmp += ".txt";
 	this->print_to_file(tmp);
-	std::cout << this->_min_opt->get_goal_value_by_index(0)/this->_min_opt->get_weight_factor_by_index(0) << 
-		" " << this->_min_opt->get_goal_value_by_index(1) / this->_min_opt->get_weight_factor_by_index(1) <<
-		" " << this->_min_opt->get_goal_value_by_index(2) / this->_min_opt->get_weight_factor_by_index(2) << std::endl;
-	std::cout << this->_max_opt->get_goal_value_by_index(0) / this->_max_opt->get_weight_factor_by_index(0) <<
-		" " << this->_max_opt->get_goal_value_by_index(1) / this->_max_opt->get_weight_factor_by_index(1) <<
-		" " << this->_max_opt->get_goal_value_by_index(2) << std::endl;
+	/*std::cout << this->_best_goals_min[0] << " " <<
+		this->_best_weight_factors_min[0] << " " <<
+		this->_best_goals_min[0] / this->_best_weight_factors_min[0] << std::endl;
+	std::cout << this->_best_goals_min[1] << " " <<
+		this->_best_weight_factors_min[1] << " " <<
+		this->_best_goals_min[1] / this->_best_weight_factors_min[1] << std::endl;
+	std::cout << this->_best_goals_min[2] << " " <<
+		this->_best_weight_factors_min[2] << " " <<
+		this->_best_goals_min[2] / this->_best_weight_factors_min[2] << std::endl;
+	std::cout << this->_best_goals_max[0] << " " <<
+		this->_best_weight_factors_max[0] << " " <<
+		this->_best_goals_max[0] / this->_best_weight_factors_max[0] << std::endl;
+	std::cout << this->_best_goals_max[1] << " " <<
+		this->_best_weight_factors_max[1] << " " <<
+		this->_best_goals_max[1] / this->_best_weight_factors_max[1] << std::endl;
+	std::cout << this->_best_goals_max[2] << std::endl;*/
 }
 
 void OptimizerRunner::print_to_file(const std::string &filename) {

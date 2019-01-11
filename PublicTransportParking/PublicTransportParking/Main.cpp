@@ -15,7 +15,7 @@ int main()
 
 	Data* data = new Data();
 
-	std::string file_to_load = "instanca1.txt";
+	std::string file_to_load = "instanca3.txt";
 
 	data->LoadData(file_to_load);
 
