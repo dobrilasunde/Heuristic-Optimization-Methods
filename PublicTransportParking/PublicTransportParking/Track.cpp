@@ -21,7 +21,7 @@ bool Track::CanPark(Vehicle* vehicle)
 		bonus = 0.5f;
 	}
 
-	if ((vehicle->GetLength() + mLengthOfParkedVehicles + bonus > mLength) || (vehicle->GetCanParkOnTrack(mID-1) != true) || (mCategory != 0 && !mParkedVehicles.empty() && mCategory != vehicle->GetCategory()))
+	if ((vehicle->GetLength() + mLengthOfParkedVehicles + bonus > (float)(mLength)) || (vehicle->GetCanParkOnTrack(mID-1) != true) || (mCategory != 0 && !mParkedVehicles.empty() && mCategory != vehicle->GetCategory()))
 	{
 		return false;
 	}
@@ -55,10 +55,10 @@ bool Track::UnparkVehicle(Vehicle *vehicle) {
 	for (int i = 0; i < mParkedVehicles.size(); i++) {
 		if (vehicle == mParkedVehicles[i]) {
 			mLengthOfParkedVehicles -= vehicle->GetLength();
+			mParkedVehicles.erase(mParkedVehicles.begin() + i);
 			if (!mParkedVehicles.empty()) {
 				mLengthOfParkedVehicles -= 0.5f;
 			}
-			mParkedVehicles.erase(mParkedVehicles.begin() + i);
 			if (mParkedVehicles.empty()) {
 				mCategory = 0;
 			}
@@ -73,7 +73,7 @@ bool Track::CanSwitchVehicles(Vehicle* oldVehicle, Vehicle* newVehicle)
 {
 	float lengthOfParkedVehicles = mLengthOfParkedVehicles - oldVehicle->GetLength();
 
-	if ((newVehicle->GetLength() + lengthOfParkedVehicles > mLength) || (newVehicle->GetCanParkOnTrack(mID-1) != true) || (mCategory != 0 && mParkedVehicles.size() != 1 && mParkedVehicles.size() != 0 && mCategory != newVehicle->GetCategory()))
+	if ((newVehicle->GetLength() + lengthOfParkedVehicles > (float)(mLength)) || (newVehicle->GetCanParkOnTrack(mID-1) != true) || (mCategory != 0 && mParkedVehicles.size() != 1 && mParkedVehicles.size() != 0 && mCategory != newVehicle->GetCategory()))
 	{
 		return false;
 	}
