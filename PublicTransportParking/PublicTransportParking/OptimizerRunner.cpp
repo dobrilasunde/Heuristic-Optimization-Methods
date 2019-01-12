@@ -298,6 +298,9 @@ void OptimizerRunner::start_optimizing(const std::string& file_to_load) {
 			if (this->_data->InsertUnsorted()) {
 				std::cout << "Managed to insert an unsorted vehicle! " << this->_data->GetUnsortedVehicles().size() << " unsorted vehicles left!" << std::endl;
 				nothing_happened = 0;
+				this->_best_value_max = this->_max_opt->calculate_global_goal();
+				this->_best_value_min = this->_min_opt->calculate_global_goal();
+				this->set_best_result();
 			}
 		}
 
