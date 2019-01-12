@@ -19,7 +19,7 @@ public:
 	void print_data(bool print_unsorted);
 	void print_to_file(const std::string &filename);
 	bool SwapUnsortedVehicle(class Vehicle *unsorted, class Vehicle *sorted);
-	bool InsertFirstUnsorted();
+	bool InsertUnsorted();
 	bool SwapVehicles(class Vehicle *new_vehicle, class Vehicle *old_vehicle);
 
 private:

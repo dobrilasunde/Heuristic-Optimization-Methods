@@ -216,7 +216,7 @@ void Data::ArrangeVehiclesToTracks()
 {
 	SortVehiclesByDepartureTime();
 	mRoot->SortByNumberOfChildren();
-	for (int i = 0; i < mVehicles.size(); ++i)
+	/*for (int i = 0; i < mVehicles.size(); ++i)
 	{
 		if (mRoot->AddVehicleToTrack(mVehicles[i]))
 		{
@@ -228,6 +228,11 @@ void Data::ArrangeVehiclesToTracks()
 			std::cout << "Vehicle " << mVehicles[i]->GetVehicleID() << ": " << mVehicles[i]->GetDepartureTime() << " unsorted" << std::endl;
 			mUnsortedVehicles.push_back(mVehicles[i]);
 		}
+	}*/
+	mRoot->AddVehicleToTrack(mVehicles[0]);
+	mSortedVehicles.push_back(mVehicles[0]);
+	for (int i = 1; i < mVehicles.size(); i++) {
+		mUnsortedVehicles.push_back(mVehicles[i]);
 	}
 }
 
@@ -276,10 +281,8 @@ void Data::print_to_file(const std::string &filename) {
 bool Data::SwapUnsortedVehicle(Vehicle *unsorted, Vehicle *sorted) {
 	
 	std::vector<Node*> nodes;
-	std::vector<Node*> nodes_to_search = this->mRoot->GetChildren();
 	Node *new_node = nullptr;
-	Node *new_node_temp = nullptr;
-
+	
 	new_node = mRoot->FindChild(sorted->GetTrackID());
 
 	if (new_node->SwitchVehicleInTrack(sorted, unsorted)) {
@@ -295,21 +298,22 @@ bool Data::SwapUnsortedVehicle(Vehicle *unsorted, Vehicle *sorted) {
 	return false;
 }
 
-bool Data::InsertFirstUnsorted() {
+bool Data::InsertUnsorted() {
 	
 	if (this->mUnsortedVehicles.empty()) {
 		return false;
 	}
 
-	Vehicle *v = this->mUnsortedVehicles[0];
-	this->mUnsortedVehicles.erase(this->mUnsortedVehicles.begin());
-
-	if (this->mRoot->AddVehicleToTrack(v)) {
-		mSortedVehicles.push_back(v);
-		return true;
+	for (int i = 0; i < this->mUnsortedVehicles.size(); i++) {
+		Vehicle *v = this->mUnsortedVehicles[i];
+		
+		if (this->mRoot->AddVehicleToTrack(v)) {
+			mSortedVehicles.push_back(v);
+			this->mUnsortedVehicles.erase(this->mUnsortedVehicles.begin() + i);
+			return true;
+		}
 	}
 
-	this->mUnsortedVehicles.push_back(v);
 	return false;
 }
 

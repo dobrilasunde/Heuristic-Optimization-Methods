@@ -126,29 +126,13 @@ void OptimizerRunner::start_optimizing(const std::string& file_to_load) {
 	time_t start_time = time(NULL);
 	bool measure_time = true, print_60 = true;
 	std::vector<int> taboo_list;
-	int taboo_time = this->_data->GetVehicles().size() / 3, current_taboo_time = 0;
-
+	int taboo_time = (int)(this->_data->GetVehicles().size() / 2), current_taboo_time = 0;
+	
 	while (nothing_happened < 2 * this->_data->GetTracks().size() * this->_data->GetVehicles().size()) {
 		this->_iter++;
 
 		int swaps = 0;
 		bool cond = false;
-
-		/* Try to swap an unsorted vehicle with a sorted one. */
-		if (this->_data->GetUnsortedVehicles().size() > 0) {
-			for (int i = 0; i < this->_data->GetSortedVehicles().size(); i++) {
-				for (int j = 0; j < this->_data->GetUnsortedVehicles().size(); j++) {
-					if (this->_data->SwapUnsortedVehicle(this->_data->GetUnsortedVehicles()[j], this->_data->GetSortedVehicles()[i])) {
-						//std::cout << "Managed to swap an unsorted vehicle!" << std::endl;
-						cond = true;
-						break;
-					}
-				}
-				if (cond) {
-					break;
-				}
-			}
-		}
 
 		/* ########### */
 
@@ -204,7 +188,7 @@ void OptimizerRunner::start_optimizing(const std::string& file_to_load) {
 		}
 
 		if (min_or_max > 0 && best_track_index_max != -1) {
-			original_track->UnparkVehicle(v);
+			//original_track->UnparkVehicle(v);
 			this->_data->GetTracks()[best_track_index_max]->GetNode()->AddVehicleToTrack(v);
 			this->_data->GetTracks()[best_track_index_max]->SortVehiclesInTrack();
 			temp_best_value_max = this->_max_opt->calculate_global_goal();
@@ -215,7 +199,7 @@ void OptimizerRunner::start_optimizing(const std::string& file_to_load) {
 			}
 		}
 		else if (min_or_max <= 0 && best_track_index_min != -1) {
-			original_track->UnparkVehicle(v);
+			//original_track->UnparkVehicle(v);
 			this->_data->GetTracks()[best_track_index_min]->GetNode()->AddVehicleToTrack(v);
 			this->_data->GetTracks()[best_track_index_min]->SortVehiclesInTrack();
 			temp_best_value_min = this->_min_opt->calculate_global_goal();
@@ -225,6 +209,10 @@ void OptimizerRunner::start_optimizing(const std::string& file_to_load) {
 				nothing_happened = 0;
 			}
 		}
+		else {
+			original_track->GetNode()->AddVehicleToTrack(v, false);
+			original_track->SortVehiclesInTrack();
+		}
 
 		/* ############ */
 
@@ -232,6 +220,9 @@ void OptimizerRunner::start_optimizing(const std::string& file_to_load) {
 		min_or_max = 0;
 
 		/* Try to swap two sorted vehicles. */
+		
+		temp_best_value_max = this->_max_opt->get_worst_value();
+		temp_best_value_min = this->_min_opt->get_worst_value();
 
 		for (int i = 0; i < this->_data->GetSortedVehicles().size(); i++) {
 			if (v->GetTrackID() == this->_data->GetSortedVehicles()[i]->GetTrackID()) {
@@ -255,7 +246,6 @@ void OptimizerRunner::start_optimizing(const std::string& file_to_load) {
 				this->_data->SwapVehicles(this->_data->GetSortedVehicles()[i], v);
 			}
 		}
-
 		if (min_or_max > 0 && best_index_max != -1) {
 			this->_data->SwapVehicles(v, this->_data->GetSortedVehicles()[best_index_max]);
 			temp_best_value_max = this->_max_opt->calculate_global_goal();
@@ -286,11 +276,28 @@ void OptimizerRunner::start_optimizing(const std::string& file_to_load) {
 
 		/* ########## */
 		
+		/* Try to swap an unsorted vehicle with a sorted one. */
+		if (this->_data->GetUnsortedVehicles().size() > 0) {
+			for (int i = 0; i < this->_data->GetSortedVehicles().size(); i++) {
+				for (int j = 0; j < this->_data->GetUnsortedVehicles().size(); j++) {
+					if (this->_data->SwapUnsortedVehicle(this->_data->GetUnsortedVehicles()[j], this->_data->GetSortedVehicles()[i])) {
+						//std::cout << "Managed to swap an unsorted vehicle!" << std::endl;
+						cond = true;
+						break;
+					}
+				}
+				if (cond) {
+					break;
+				}
+			}
+		}
+
 		/* Try to insert an unsorted vehicle */
 
 		if (this->_data->GetUnsortedVehicles().size() > 0) {
-			if (this->_data->InsertFirstUnsorted()) {
+			if (this->_data->InsertUnsorted()) {
 				std::cout << "Managed to insert an unsorted vehicle! " << this->_data->GetUnsortedVehicles().size() << " unsorted vehicles left!" << std::endl;
+				nothing_happened = 0;
 			}
 		}
 

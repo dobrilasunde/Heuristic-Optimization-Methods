@@ -25,16 +25,4 @@ int main()
 	//data->start_optimizing(new MinOptimizer(data));
 	OptimizerRunner *runner = new OptimizerRunner(new MinOptimizer(data), new MaxOptimizer(data), data);
 	runner->start_optimizing(file_to_load);
-	int attempt = 2;
-	/*while (!runner->get_data()->GetUnsortedVehicles().empty()) {
-		std::cout << "Not all vehicles sorted, starting over (attempt: " << attempt++ << ")" << std::endl;
-		delete runner;
-		delete data;
-		data = new Data();
-		data->LoadData(file_to_load);
-		data->ArrangeVehiclesToTracks();
-		data->print_data(true);
-		runner = new OptimizerRunner(new MinOptimizer(data), new MaxOptimizer(data), data);
-		runner->start_optimizing(file_to_load);
-	}*/
 }
