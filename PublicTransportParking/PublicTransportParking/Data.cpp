@@ -293,6 +293,7 @@ bool Data::SwapUnsortedVehicle(Vehicle *unsorted, Vehicle *sorted) {
 		mUnsortedVehicles.push_back(sorted);
 		sorted->SetTrackID(-1);
 		unsorted->SetTrackID(new_node->GetTrack()->GetID());
+		new_node->GetTrack()->SortVehiclesInTrack();
 		return true;
 	}
 	return false;
@@ -310,6 +311,7 @@ bool Data::InsertUnsorted() {
 		if (this->mRoot->AddVehicleToTrack(v)) {
 			mSortedVehicles.push_back(v);
 			this->mUnsortedVehicles.erase(this->mUnsortedVehicles.begin() + i);
+			this->mRoot->FindChild(v->GetTrackID())->GetTrack()->SortVehiclesInTrack();
 			return true;
 		}
 	}
@@ -336,9 +338,13 @@ bool Data::SwapVehicles(Vehicle *new_vehicle, Vehicle *old_vehicle) {
 			old_node->GetTrack()->SortVehiclesInTrack();
 			new_vehicle->SetTrackID(old_node->GetTrack()->GetID());
 			old_vehicle->SetTrackID(new_node->GetTrack()->GetID());
+			old_node->GetTrack()->SortVehiclesInTrack();
+			new_node->GetTrack()->SortVehiclesInTrack();
 			return true;
 		}
 		new_node->SwitchVehicleInTrack(old_vehicle, new_vehicle);
 	}
+	old_node->GetTrack()->SortVehiclesInTrack();
+	new_node->GetTrack()->SortVehiclesInTrack();
 	return false;
 }
