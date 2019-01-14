@@ -272,26 +272,38 @@ void OptimizerRunner::start_optimizing(const std::string& file_to_load) {
 		}
 		else {
 			nothing_happened++;
-			if (this->_data->GetUnsortedVehicles().size() > 0) {
-				for (int i = 0; i < this->_data->GetSortedVehicles().size(); i++) {
-					for (int j = 0; j < this->_data->GetUnsortedVehicles().size(); j++) {
-						if (this->_data->SwapUnsortedVehicle(this->_data->GetUnsortedVehicles()[j], this->_data->GetSortedVehicles()[i])) {
-							//std::cout << "Managed to swap an unsorted vehicle!" << std::endl;
-							cond = true;
-							break;
-						}
-					}
-					if (cond) {
-						break;
-					}
-				}
-			}
 		}
 
 		/* ########## */
 		
 		/* Try to swap an unsorted vehicle with a sorted one. */
-		
+
+		if (this->_data->GetUnsortedVehicles().size() > 0) {
+			int uns_size = this->_data->GetUnsortedVehicles().size();
+			std::vector<int> banned_index;
+			for (int i = 0; i < uns_size; i++) {
+				for (int j = 0; j < this->_data->GetSortedVehicles().size(); j++) {
+					if (find(banned_index.begin(), banned_index.end(), j) != banned_index.end()) {
+						continue;
+					}
+					if (this->_data->SwapUnsortedVehicle(this->_data->GetUnsortedVehicles()[i], this->_data->GetSortedVehicles()[j])) {
+						//std::cout << "Managed to swap an unsorted vehicle!" << std::endl;
+						cond = true;
+						banned_index.push_back(j);
+						break;
+					}
+				}
+				if (cond) {
+					this->_best_value_min = this->_min_opt->calculate_global_goal();
+					this->_best_value_max = this->_max_opt->calculate_global_goal();
+					this->set_best_result();
+					i--;
+					uns_size--;
+					//break;
+				}
+			}
+		}
+
 		/* Try to insert an unsorted vehicle */
 
 		if (this->_data->GetUnsortedVehicles().size() > 0) {
