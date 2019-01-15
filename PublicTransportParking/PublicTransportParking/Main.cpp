@@ -31,7 +31,6 @@ int main()
 	data->ArrangeVehiclesToTracks();
 	data->print_data(true);
 
-	//data->start_optimizing(new MinOptimizer(data));
 	OptimizerRunner *runner = new OptimizerRunner(new MinOptimizer(data), new MaxOptimizer(data), data);
 	runner->start_optimizing(file_to_load);
 }

@@ -134,8 +134,6 @@ void OptimizerRunner::start_optimizing(const std::string& file_to_load) {
 		int swaps = 0;
 		bool cond = false;
 
-		/* ########### */
-
 		if (current_taboo_time >= taboo_time && !taboo_list.empty()) {
 			taboo_list.erase(taboo_list.begin());
 			current_taboo_time--;
@@ -188,7 +186,6 @@ void OptimizerRunner::start_optimizing(const std::string& file_to_load) {
 		}
 
 		if (min_or_max > 0 && best_track_index_max != -1) {
-			//original_track->UnparkVehicle(v);
 			this->_data->GetTracks()[best_track_index_max]->GetNode()->AddVehicleToTrack(v);
 			this->_data->GetTracks()[best_track_index_max]->SortVehiclesInTrack();
 			temp_best_value_max = this->_max_opt->calculate_global_goal();
@@ -199,7 +196,6 @@ void OptimizerRunner::start_optimizing(const std::string& file_to_load) {
 			}
 		}
 		else if (min_or_max <= 0 && best_track_index_min != -1) {
-			//original_track->UnparkVehicle(v);
 			this->_data->GetTracks()[best_track_index_min]->GetNode()->AddVehicleToTrack(v);
 			this->_data->GetTracks()[best_track_index_min]->SortVehiclesInTrack();
 			temp_best_value_min = this->_min_opt->calculate_global_goal();
@@ -299,10 +295,11 @@ void OptimizerRunner::start_optimizing(const std::string& file_to_load) {
 					this->set_best_result();
 					i--;
 					uns_size--;
-					//break;
 				}
 			}
 		}
+
+		/* ########### */
 
 		/* Try to insert an unsorted vehicle */
 
@@ -315,6 +312,8 @@ void OptimizerRunner::start_optimizing(const std::string& file_to_load) {
 				this->set_best_result();
 			}
 		}
+
+		/* ########## */
 
 		time_t checkpoint = time(NULL) - start_time;
 		if (measure_time) {
@@ -345,22 +344,6 @@ void OptimizerRunner::start_optimizing(const std::string& file_to_load) {
 	tmp += file_to_load[8];
 	tmp += ".txt";
 	this->print_to_file(tmp);
-	/*std::cout << this->_best_goals_min[0] << " " <<
-		this->_best_weight_factors_min[0] << " " <<
-		this->_best_goals_min[0] / this->_best_weight_factors_min[0] << std::endl;
-	std::cout << this->_best_goals_min[1] << " " <<
-		this->_best_weight_factors_min[1] << " " <<
-		this->_best_goals_min[1] / this->_best_weight_factors_min[1] << std::endl;
-	std::cout << this->_best_goals_min[2] << " " <<
-		this->_best_weight_factors_min[2] << " " <<
-		this->_best_goals_min[2] / this->_best_weight_factors_min[2] << std::endl;
-	std::cout << this->_best_goals_max[0] << " " <<
-		this->_best_weight_factors_max[0] << " " <<
-		this->_best_goals_max[0] / this->_best_weight_factors_max[0] << std::endl;
-	std::cout << this->_best_goals_max[1] << " " <<
-		this->_best_weight_factors_max[1] << " " <<
-		this->_best_goals_max[1] / this->_best_weight_factors_max[1] << std::endl;
-	std::cout << this->_best_goals_max[2] << std::endl;*/
 }
 
 void OptimizerRunner::print_to_file(const std::string &filename) {

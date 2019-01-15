@@ -1,3 +1,3 @@
-Max function: 1.52302
-Min function: 2.35012
-Iterations: 5102
+Max function: 1.26865
+Min function: 2.512
+Iterations: 6256
